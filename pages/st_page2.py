@@ -45,7 +45,6 @@ st.title("1. Data Information (df.info)")
 st.divider()
 
 df = pd.read_csv("sample_stream_events.csv")
-df = df.head(100)
 
 dtypes_df = pd.DataFrame({
     "dtype": df.dtypes,
