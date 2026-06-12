@@ -64,7 +64,7 @@ st.write("""<p style= font-size: 30px;text-align:center;>Dataset yang Digunakan:
 st.write("""<p style= font-size: 22px; text-align:left;>Dataset 1</p>""", unsafe_allow_html=True)
 
 header = ['asset_id', 'asset_type', 'data_classification']
-df = pd.read_csv("assets.csv", names=header)
+df = pd.read_csv("assets.csv)
 df = df.head(10)
 st.dataframe(df)
 
@@ -80,7 +80,7 @@ st.divider()
 st.write("""<p style= font-size: 22px; text-align:left;>Dataset 2</p>""", unsafe_allow_html=True)
 
 header = ['user_id', 'employee_id', 'dept','role', 'clearance', 'location', 'status']
-df = pd.read_csv("users.csv", names=header)
+df = pd.read_csv("users.csv")
 df = df.head(150)
 st.dataframe(df)
 
@@ -98,7 +98,7 @@ st.divider()
 st.write("""<p style= font-size: 22px; text-align:left;>Dataset 3</p>""", unsafe_allow_html=True)
 
 header = ['event_id', 'event_time','user_id', 'dept', 'role', 'device_type', 'source_ip', 'asset_id', 'asset_type' , 'data_classification', 'action', 'status' , 'bytes_out', 'records_accessed' , 'latency_ms' , 'risk_score', 'label', 'failed_login_count', 'alert_level']
-df = pd.read_csv("event_alert_stream.csv", names=header)
+df = pd.read_csv("event_alert_stream.csv")
 df = df.head(100)
 st.dataframe(df)
 
