@@ -133,7 +133,7 @@ st.bar_chart(
 )
 st.divider()
 
-st.subheader("Critical Fraud Table")
+st.title("Critical Alert Table")
 critical_df = df[
     df['alert_level'] == 'CRITICAL'
 ]
@@ -142,6 +142,28 @@ st.dataframe(
     critical_df
 )
 st.divider()
+
+st.title("Top 10 Security Alerts")
+top_alert = (
+    df.sort_values(
+        by='risk_score',
+        ascending=False
+    )
+    .head(10)
+)
+
+st.dataframe(
+    top_alert[
+        [
+            'event_id',
+            'user_id',
+            'action',
+            'asset_id',
+            'risk_score',
+            'alert_level'
+        ]
+    ]
+)
 
 st.title("Latest Events")
 
