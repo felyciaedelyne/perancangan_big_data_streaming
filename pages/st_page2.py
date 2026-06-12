@@ -44,8 +44,7 @@ st.divider()
 st.title("1. Data Information (df.info)")
 st.divider()
 
-header = ['event_id', 'event_time','user_id', 'dept', 'role', 'device_type', 'source_ip', 'asset_id', 'asset_type' , 'data_classification', 'action', 'status' , 'bytes_out', 'records_accessed' , 'latency_ms' , 'risk_score', 'label', 'failed_login_count', 'alert_level']
-df = pd.read_csv("event_alert_stream.csv", names=header, header=None)
+df = pd.read_csv("sample_stream_events.csv")
 df = df.head(100)
 
 dtypes_df = pd.DataFrame({
