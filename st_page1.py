@@ -103,23 +103,23 @@ df = df.head(100)
 st.dataframe(df)
 
 st.markdown("""
-1. **event_id**: identitas unik yang dimiliki oleh event</li>
-2. **event_time**: waktu terjadinya event untuk analisis kronologi aktivitas</li>
-3. **user_id**: identitas unik yang dimiliki oleh setiap pengguna yang melakukan aktivitas</li>
-4. **dept**: departemen tempat user bekerja</li>
-5. **role**: jabatan user dalam perusahaan</li>
-6. **device_type**: jenis perangkat yang digunakan untuk mengakses sistem</li>
-7. **source_ip**: alamat ip pengguna saat mengakses sistem</li>
-8. **asset_id**: identitas jenis aset yang diakses pengguna</li>
-9. **asset_type:** : jenis aset yang diakses</li>
-10. **data_classification**: tingkat klasfikasi data yang diakses</li>
-11. **action**: jenis aktivitas yang dilakukan pengguna</li>
-12. **status**: status hasil dari aktivitas</li>
-13. **bytes_out**: jumlah data yang ditransfer keluar dari sistem</li>
-14. **records_accessed** : jumlah data yang diakses dalam 1 aktivitas</li>
-15. **latency_ms**: waktu sistem merespon terhadap aktivitas pengguna</li>
-16. **risk_score**: risiko yang menunjukkan seberapa tinggi ancaman tindakan terhadap sistem</li>
-17. **label**: kategori akhir suatu aktivitas</li>
-18. **failed_login_count** : jumlah percobaan gagal login oleh pengguna</li>
-19. **alert_level**: tingkat alert keamanan yang diberikan ke suatu aktivitas berdasarkan tingkat risikonya</li>
+1. **event_id**: identitas unik yang dimiliki oleh event
+2. **event_time**: waktu terjadinya event untuk analisis kronologi aktivitas
+3. **user_id**: identitas unik yang dimiliki oleh setiap pengguna yang melakukan aktivitas
+4. **dept**: departemen tempat user bekerja
+5. **role**: jabatan user dalam perusahaan
+6. **device_type**: jenis perangkat yang digunakan untuk mengakses sistem
+7. **source_ip**: alamat ip pengguna saat mengakses sistem
+8. **asset_id**: identitas jenis aset yang diakses pengguna
+9. **asset_type:** : jenis aset yang diakses
+10. **data_classification**: tingkat klasfikasi data yang diakses
+11. **action**: jenis aktivitas yang dilakukan pengguna
+12. **status**: status hasil dari aktivitas
+13. **bytes_out**: jumlah data yang ditransfer keluar dari sistem
+14. **records_accessed** : jumlah data yang diakses dalam 1 aktivitas
+15. **latency_ms**: waktu sistem merespon terhadap aktivitas pengguna
+16. **risk_score**: risiko yang menunjukkan seberapa tinggi ancaman tindakan terhadap sistem
+17. **label**: kategori akhir suatu aktivitas
+18. **failed_login_count** : jumlah percobaan gagal login oleh pengguna
+19. **alert_level**: tingkat alert keamanan yang diberikan ke suatu aktivitas berdasarkan tingkat risikonya
 """)
