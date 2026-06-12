@@ -64,7 +64,7 @@ st.write("""<p style= font-size: 30px;text-align:center;>Dataset yang Digunakan:
 st.write("""<p style= font-size: 22px; text-align:left;>Dataset 1</p>""", unsafe_allow_html=True)
 
 header = ['asset_id', 'asset_type', 'data_classification']
-df = pd.read_csv("assets.csv)
+df = pd.read_csv("assets.csv")
 df = df.head(10)
 st.dataframe(df)
 
