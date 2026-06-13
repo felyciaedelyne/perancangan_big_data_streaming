@@ -3,7 +3,14 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-df = pd.read_csv('sample_stream_events.csv')
+stream_event = pd.read_csv('sample_stream_events.csv')
+user = pd.read_csv('users.csv')
+merged = stream_event.merge(
+    user,
+    on = 'user_id',
+    how = 'left'
+)
+merged.head()
 
 st.set_page_config(
     page_title='Event Stream - Visualisasi Distribusi', 
@@ -46,7 +53,7 @@ st.divider()
 st.title("Label Distribution")
 
 label_dist = (
-    df['label']
+    stream_event['label']
     .value_counts()
     .reset_index()
 )
@@ -80,7 +87,7 @@ tab1, tab2 = st.tabs(["Chart", "Statistics"])
 with tab1:
 
     fig = px.histogram(
-        df,
+        stream_event,
         x='risk_score',
         nbins=20
     )
@@ -98,7 +105,7 @@ with tab1:
 with tab2:
 
     st.dataframe(
-        df['risk_score'].describe(),
+        stream_event['risk_score'].describe(),
         use_container_width=True
     )
 st.divider()
@@ -110,7 +117,7 @@ tab1, tab2 = st.tabs(["Chart", "Dataframe"])
 with tab1:
 
     fig = px.box(
-        df,
+        stream_event,
         x='label',
         y='risk_score',
         color='label'
@@ -129,7 +136,7 @@ with tab1:
 with tab2:
 
     summary = (
-        df
+        stream_event
         .groupby('label')['risk_score']
         .describe()
         .reset_index()
@@ -148,7 +155,7 @@ tab1, tab2 = st.tabs(["Chart", "Dataframe"])
 with tab1:
 
     fig = px.scatter(
-        df,
+        stream_event,
         x='bytes_out',
         y='risk_score',
         color='label',
@@ -172,7 +179,7 @@ with tab1:
 with tab2:
 
     st.dataframe(
-        df[
+        stream_event[
             [
                 'user_id',
                 'bytes_out',
@@ -180,5 +187,184 @@ with tab2:
                 'label'
             ]
         ].head(20),
+        use_container_width=True
+    )
+
+st.title("Data Security Risk Patterns")
+st.divider()
+#Risk 1
+risk1 = merged[
+    merged['status_y'] != 'active'
+]
+
+risk1_summary = (
+    risk1.groupby(
+        ['user_id', 'status_y', 'dept_y']
+    )
+    .agg(
+        jumlah_event=('event_id', 'count'),
+        total_bytes_out=('bytes_out', 'sum'),
+        avg_risk_score=('risk_score', 'mean'),
+        max_risk_score=('risk_score', 'max')
+    )
+    .reset_index()
+    .sort_values(
+        'jumlah_event',
+        ascending=False
+    )
+)
+#Risk 2
+risk2 = merged[
+    (merged['data_classification'].isin(
+        ['confidential', 'restricted']
+    ))
+    &
+    (
+        merged['bytes_out']
+        >
+        merged['bytes_out'].quantile(0.95)
+    )
+]
+
+risk2_summary = (
+    risk2.groupby(
+        [
+            'user_id',
+            'asset_id',
+            'data_classification',
+            'action'
+        ]
+    )
+    .agg(
+        jumlah_event=('event_id', 'count'),
+        total_bytes_out=('bytes_out', 'sum'),
+        avg_risk_score=('risk_score', 'mean')
+    )
+    .reset_index()
+    .sort_values(
+        'total_bytes_out',
+        ascending=False
+    )
+)
+
+#Risk 3
+merged['is_external_ip'] = (
+    ~merged['source_ip']
+    .astype(str)
+    .str.startswith('10.10.')
+)
+
+risk3 = merged[
+    (merged['action'] == 'permission_change')
+    &
+    (merged['is_external_ip'])
+]
+
+risk3_summary = (
+    risk3.groupby(
+        [
+            'user_id',
+            'source_ip',
+            'dept_y',
+            'role_y',
+            'status_y'
+        ]
+    )
+    .agg(
+        jumlah_event=('event_id', 'count'),
+        avg_risk_score=('risk_score', 'mean'),
+        max_risk_score=('risk_score', 'max')
+    )
+    .reset_index()
+    .sort_values(
+        'jumlah_event',
+        ascending=False
+    )
+)
+tab1, tab2, tab3 = st.tabs([
+    "Risk 1: Terminated User",
+    "Risk 2: Large Sensitive Download",
+    "Risk 3: External Permission Change"
+])
+
+with tab1:
+
+    st.subheader("Akses oleh User Terminated")
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric(
+        "Terminated Users",
+        risk1['user_id'].nunique()
+    )
+
+    col2.metric(
+        "Total Events",
+        len(risk1)
+    )
+
+    col3.metric(
+        "Avg Risk Score",
+        round(risk1['risk_score'].mean(), 2)
+    )
+
+    st.dataframe(
+        risk1_summary.head(10),
+        use_container_width=True
+    )
+
+with tab2:
+
+    st.subheader(
+        "Large Download from Confidential/Restricted Data"
+    )
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric(
+        "Users",
+        risk2['user_id'].nunique()
+    )
+
+    col2.metric(
+        "Events",
+        len(risk2)
+    )
+
+    col3.metric(
+        "Total Bytes Out",
+        f"{risk2['bytes_out'].sum():,.0f}"
+    )
+
+    st.dataframe(
+        risk2_summary.head(10),
+        use_container_width=True
+    )
+
+with tab3:
+
+    st.subheader(
+        "Permission Change from External IP"
+    )
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric(
+        "Users",
+        risk3['user_id'].nunique()
+    )
+
+    col2.metric(
+        "External IP",
+        risk3['source_ip'].nunique()
+    )
+
+    col3.metric(
+        "Events",
+        len(risk3)
+    )
+
+    st.dataframe(
+        risk3_summary.head(10),
         use_container_width=True
     )
